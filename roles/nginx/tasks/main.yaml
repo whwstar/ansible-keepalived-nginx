@@ -1,0 +1,32 @@
+---
+
+- name: add user nginx
+  user:
+    name: nginx
+    group: nginx
+    shell: /bin/false
+
+- name: copy nginx tar package
+  copy: 
+    src: nginx-1.13.12.tar.gz 
+    dest: /usr/local/nginx-1.13.12.tar.gz
+    owner: root
+    group: root
+    mode: 755
+
+- name: untar package nginx-1.13.12.tar.gz
+  shell: tar -zxvf /usr/local/nginx-1.13.12.tar.gz -C /usr/local && rm -rf /usr/local/nginx-1.13.12.tar.gz
+
+- name: replace nginx config file
+  template:  
+    src: nginx.conf.j2
+    dest: /usr/local/nginx-1.13.12/conf/nginx.conf
+    owner: root
+    group: root
+    mode: 644
+    backup: yes    
+
+- name: start nginx server
+  shell: cd /usr/local/nginx-1.13.12/sbin && ./nginx
+
+

@@ -1,0 +1,9 @@
+---
+
+- hosts: keepalived
+  roles:
+  - { role: keepalived }
+
+- hosts: nginx
+  roles:
+  - { role: nginx }

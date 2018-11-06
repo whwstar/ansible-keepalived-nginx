@@ -1,0 +1,24 @@
+worker_processes  {{ processes }};
+events {
+    worker_connections  {{ connections }};
+}
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+    upstream asrservers {
+        server {{ asr_ip }}:{{ asr_port }};
+    }
+    server {
+        listen       {{ port }} http2;
+        server_name  {{ asr_ip }};
+        location / {
+	    grpc_pass grpc://asrservers;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+}
